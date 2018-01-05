@@ -24,8 +24,16 @@ const ERRORS = {
   CLIENT_ID: 'stan: clientID already registered',
   CONNECTION: 'NatsError: Could not connect to server'
 }
+const LOGGER = {
+  trace: console.log, // eslint-disable-line
+  debug: console.log, // eslint-disable-line
+  info: console.log, // eslint-disable-line
+  warn: console.log, // eslint-disable-line
+  error: console.log, // eslint-disable-line
+  fatal: console.log // eslint-disable-line
+}
 
-async function getInstance (server, cluster, appName, logger) {
+async function getInstance (server, cluster, appName, logger = LOGGER) {
   const clientId = getClientId(appName)
   const inst = CLIENT_CONNECTION_MAP[clientId]
 
