@@ -25,12 +25,9 @@ const ERRORS = {
   CONNECTION: 'NatsError: Could not connect to server'
 }
 const LOGGER = {
-  trace: console.log, // eslint-disable-line
-  debug: console.log, // eslint-disable-line
   info: console.log, // eslint-disable-line
   warn: console.log, // eslint-disable-line
-  error: console.log, // eslint-disable-line
-  fatal: console.log // eslint-disable-line
+  error: console.log // eslint-disable-line
 }
 
 async function getInstance (server, cluster, appName, logger = LOGGER) {

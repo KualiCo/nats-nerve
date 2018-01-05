@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/KualiCo/nats-nerve/branch/master/graph/badge.svg)](https://codecov.io/gh/KualiCo/nats-nerve)
+
 # nats-nerve
 High level driver for nats-streaming-server. 
 

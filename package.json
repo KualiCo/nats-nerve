@@ -3,9 +3,41 @@
   "version": "1.0.1",
   "description": "High level driver for nats streaming server",
   "main": "index.js",
+  "keywords": [],
+  "author": "kuali",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KualiCo/nats-nerve.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kualico/nats-nerve/issues"
+  },
   "scripts": {
-    "test": "standard && npm run test:jest",
-    "test:jest": "jest --runInBand"
+    "test": "standard && npm run test:jest && codecov -t 55cf8294-0ad6-449b-8079-611038bde722",
+    "test:jest": "NODE_ENV=test jest --runInBand"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "html",
+      "text"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 70,
+        "branches": 70,
+        "lines": 70,
+        "functions": 70
+      }
+    },
+    "forceExit": true,
+    "mapCoverage": true,
+    "moduleDirectories": [
+      "node_modules"
+    ]
   },
   "standard": {
     "env": [
@@ -20,18 +52,9 @@
     "src",
     "index.js"
   ],
-  "keywords": [],
-  "author": "kuali",
-  "license": "AGPL-3.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/KualiCo/nats-nerve.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kualico/nats-nerve/issues"
-  },
   "devDependencies": {
     "bluebird": "3.5.1",
+    "codecov": "^3.0.0",
     "jest": "22.0.4",
     "standard": "10.0.3"
   },
