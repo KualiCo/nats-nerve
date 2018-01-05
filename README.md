@@ -2,8 +2,7 @@
 [![codecov](https://codecov.io/gh/KualiCo/nats-nerve/branch/master/graph/badge.svg)](https://codecov.io/gh/KualiCo/nats-nerve)
 
 # nats-nerve
-![Nerve Logo](https://s3-us-west-2.amazonaws.com/co.kuali.cor.build-assets/nerve.svg | width=250)
-
+<img src="https://s3-us-west-2.amazonaws.com/co.kuali.cor.build-assets/nerve.svg" width="250" height="250">
 
 High level driver for nats-streaming-server.
 
