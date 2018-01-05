@@ -63,7 +63,7 @@ await new Promise(resolve => {
 Durable subscriptions have more delivery options. These should be specified on
 the options object passed to the subscribe function. They are:
 | Option  | Example Value | Description |
-| ------------- |-------------| -----|
+| ------- | ------------- | ----------- |
 | startWithLastReceived | true | Subscribe starting with the most recently published value |
 | deliverAllAvailable | true | Receive all stored values in order |
 | startAtSequence | 22 | Receive all messages starting at a specific sequence number |
