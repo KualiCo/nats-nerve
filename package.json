@@ -1,11 +1,11 @@
 {
   "name": "nats-nerve",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "High level driver for nats streaming server",
   "main": "index.js",
   "keywords": [],
   "author": "kuali",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/KualiCo/nats-nerve.git"
