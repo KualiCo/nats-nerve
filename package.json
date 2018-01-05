@@ -1,0 +1,43 @@
+{
+  "name": "nats-nerve",
+  "version": "1.0.0",
+  "description": "High level driver for nats streaming server",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && npm run test:jest",
+    "test:jest": "jest --runInBand"
+  },
+  "standard": {
+    "env": [
+      "node",
+      "jest"
+    ],
+    "ignore": [
+      "coverage"
+    ]
+  },
+  "files": [
+    "src",
+    "index.js"
+  ],
+  "keywords": [],
+  "author": "kuali",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KualiCo/nats-nerve.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kualico/nats-nerve/issues"
+  },
+  "devDependencies": {
+    "bluebird": "3.5.1",
+    "jest": "22.0.4",
+    "standard": "10.0.3"
+  },
+  "dependencies": {
+    "lodash": "4.17.4",
+    "node-nats-streaming": "0.0.26",
+    "shortid": "2.2.8"
+  }
+}
