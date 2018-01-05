@@ -65,11 +65,11 @@ the options object passed to the subscribe function. They are:
 
 | Option  | Example Value | Description |
 | ------- | ------------- | ----------- |
-| startWithLastReceived | true | Subscribe starting with the most recently published value |
-| deliverAllAvailable | true | Receive all stored values in order |
-| startAtSequence | 22 | Receive all messages starting at a specific sequence number |
-| startTime | new Date(2016, 7, 8) | Subscribe starting at a specific time |
-| startAtTimeDelta | 30000 | Subscribe starting at a specific amount of time in the past (e.g. 30 seconds ago) |
+| `startWithLastReceived` | `true` | Subscribe starting with the most recently published value |
+| `deliverAllAvailable` | `true` | Receive all stored values in order |
+| `startAtSequence` | `22` | Receive all messages starting at a specific sequence number |
+| `startTime` | `new Date(2016, 7, 8)` | Subscribe starting at a specific time |
+| `startAtTimeDelta` | `30000` | Subscribe starting at a specific amount of time in the past (e.g. 30 seconds ago) |
 
 ## Groups (Clustered Clients)
 Nats Streaming Server can send a message to a single client amongst a group.
