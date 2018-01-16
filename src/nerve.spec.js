@@ -8,7 +8,7 @@
 const assert = require('assert')
 const shortid = require('shortid')
 const Promise = require('bluebird')
-const { getInstance: Nerve, getClientId, proceedWhen } = require('./nerve')
+const { Nerve, getInstance, getClientId, proceedWhen } = require('./nerve')
 
 describe('Nerve', () => {
   const appName = 'nats-nerve'
@@ -33,7 +33,7 @@ describe('Nerve', () => {
 
   it('can construct', async () => {
     const appName = getAppName()
-    const nerve = await Nerve(server, cluster, appName, logger)
+    const nerve = await getInstance(server, cluster, appName, logger)
     assert.equal(nerve.cluster, cluster)
     assert.equal(nerve.clientId, getClientId(appName))
     assert.equal(nerve.isConnecting, false)
@@ -42,7 +42,7 @@ describe('Nerve', () => {
   })
 
   it('if the connection is unexpectedly closed it reconnects', async () => {
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     nerve.conn.close()
     let isReconnected = false
     nerve.notifyOnConnect.push(() => {
@@ -53,7 +53,7 @@ describe('Nerve', () => {
   })
 
   it('defaults the server if it is undefined', async () => {
-    const nerve = await Nerve(undefined, cluster, getAppName(), logger)
+    const nerve = await getInstance(undefined, cluster, getAppName(), logger)
     assert.equal(nerve.isConnected(), true)
     await nerve.close()
   })
@@ -63,15 +63,26 @@ describe('Nerve', () => {
       /* do nothing */
     }
     try {
-      await Nerve('nats://127.0.0.1:4333', cluster, getAppName(), logger)
+      await getInstance('nats://127.0.0.1:4333', cluster, getAppName(), logger)
       assert.fail()
     } catch (err) {
       assert.ok(err)
     }
   })
 
+  it('does not try to connect if it is already connecting', async () => {
+    const clientId = getClientId(getAppName())
+    const nerve = new Nerve(server, cluster, clientId)
+    const promise1 = nerve.connect()
+    const promise2 = nerve.connect()
+    expect(promise1).toEqual(promise2)
+    const [p1, p2] = await Promise.all([promise1, promise2])
+    expect(p1).toEqual(p2)
+    await nerve.close()
+  })
+
   it('returns the connection if it already has been created', async () => {
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     const conn1 = await nerve.connect()
     const conn2 = await nerve.connect()
     assert.equal(conn1, conn2)
@@ -80,15 +91,15 @@ describe('Nerve', () => {
 
   it('reuses an instance when connecting with the same client id', async () => {
     const appName = getAppName()
-    const nerve1 = await Nerve(server, cluster, appName, logger)
-    const nerve2 = await Nerve(server, cluster, appName, logger)
+    const nerve1 = await getInstance(server, cluster, appName, logger)
+    const nerve2 = await getInstance(server, cluster, appName, logger)
     assert.ok(nerve1.equals(nerve2))
     await nerve1.close()
   })
 
   it('can publish and subscribe', async () => {
     const channel = new Date().toISOString()
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     await nerve.connect()
     let received = false
     const subscription = nerve.subscribe(channel, msg => {
@@ -102,7 +113,7 @@ describe('Nerve', () => {
 
   it('can publish and subscribe objects', async () => {
     const channel = new Date().toISOString()
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     await nerve.connect()
     let received = false
     const subscription = nerve.subscribe(channel, msg => {
@@ -121,7 +132,7 @@ describe('Nerve', () => {
 
   it('can reset a durable subscription by unsubscribing', async () => {
     const channel = shortid.generate()
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     await nerve.connect()
     const received = [0, 0, 0, 0, 0]
     const opts = { durableName: shortid.generate() }
@@ -155,7 +166,7 @@ describe('Nerve', () => {
 
   it('can continue a durable subscription after closing', async () => {
     const channel = shortid.generate()
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     await nerve.connect()
     const received = [0, 0, 0, 0, 0]
     const opts = { durableName: shortid.generate() }
@@ -191,7 +202,7 @@ describe('Nerve', () => {
   it('can handle disconnects', async () => {
     const channel = new Date().toISOString()
     const durableName = `random-${+new Date()}`
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
 
     nerve.publisher.publish(channel, '0')
     await nerve.connect()
@@ -216,7 +227,8 @@ describe('Nerve', () => {
 
   it('attempts reconnect if unable to connect', async () => {
     let done = false
-    logger.info = jest.fn()
+    logger.info = jest
+      .fn()
       .mockImplementationOnce(() => 'one')
       .mockImplementationOnce(() => {
         done = true
@@ -230,20 +242,20 @@ describe('Nerve', () => {
     }
 
     try {
-      const nerve = await Nerve(server, cluster, getAppName(), logger)
+      const nerve = await getInstance(server, cluster, getAppName(), logger)
       nerve.conn.emit('error', new NatsError('Could not connect to server'))
     } catch (err) {
       /* no nothing */
     }
     await proceedWhen(() => done)
-    expect(logger.info.mock.calls[0][0])
-      .toBe('Nerve attempting to reconnect...')
-    expect(logger.info.mock.calls[1][0])
-      .toBe('Nerve reconnected')
+    expect(logger.info.mock.calls[0][0]).toBe(
+      'Nerve attempting to reconnect...'
+    )
+    expect(logger.info.mock.calls[1][0]).toBe('Nerve reconnected')
   })
 
   it('proceedWhen times out', async () => {
-    const nerve = await Nerve(server, cluster, getAppName(), logger)
+    const nerve = await getInstance(server, cluster, getAppName(), logger)
     let timeoutError = false
     try {
       await proceedWhen(() => false, 5, 1)

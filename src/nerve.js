@@ -57,7 +57,7 @@ async function getInstance (server, cluster, appName, logger = LOGGER) {
 
 /* Nats Event Receptor, Validator and Emitter */
 class Nerve {
-  constructor (server, cluster, clientId, logger) {
+  constructor (server, cluster, clientId, logger = LOGGER) {
     this.connect = this.connect.bind(this)
     this.reconnect = this.reconnect.bind(this)
     this.close = this.close.bind(this)
@@ -105,7 +105,12 @@ class Nerve {
     }
     this.isConnecting = true
     return new Promise((resolve, reject) => {
-      const conn = nats.connect(this.cluster, this.clientId, this.server)
+      const conn = nats.connect(this.cluster, this.clientId, {
+        url: this.server,
+        reconnect: true,
+        maxReconnectAttempts: -1,
+        reconnectTimeWait: 2000
+      })
       conn.on('connect', () => {
         this._onConnect(conn)
         resolve(conn)
