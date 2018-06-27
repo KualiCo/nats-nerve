@@ -297,7 +297,7 @@ function proceedWhen (cb, timeout = 2000, backoff = 10) {
           clearTimeout(_timeout)
           resolve(true)
         } else {
-          exponentialBackoff(_backoff * 2)
+          exponentialBackoff(Math.min(30000, _backoff * 2))
         }
       }, _backoff)
     }

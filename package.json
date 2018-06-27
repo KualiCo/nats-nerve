@@ -1,6 +1,6 @@
 {
   "name": "nats-nerve",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "High level driver for nats streaming server",
   "main": "index.js",
   "keywords": [],
